@@ -1,6 +1,8 @@
 package ada.caixa.resources;
 
-import ada.caixa.dto.CourseDTO;
+import ada.caixa.dto.CourseRequestDTO;
+import ada.caixa.dto.CourseResponseDTO;
+import ada.caixa.service.CourseService;
 import jakarta.validation.Valid;
 import jakarta.ws.rs.POST;
 import jakarta.ws.rs.Path;
@@ -9,11 +11,20 @@ import jakarta.ws.rs.core.Response;
 @Path("/courses")
 public class CourseResource {
 
+    private final CourseService courseService;
+
+    public CourseResource(CourseService courseService) {
+        this.courseService = courseService;
+    }
+
     @POST
     public Response createCourse(
-            @Valid CourseDTO courseDTO
+            @Valid CourseRequestDTO courseRequestDTO
             ) {
-        // Lógica para criar um curso
-        return Response.status(Response.Status.CREATED).build();
+        CourseResponseDTO response = courseService.createCourse(courseRequestDTO);
+        return Response
+                .status(Response.Status.CREATED)
+                .entity(response)
+                .build();
     }
 }

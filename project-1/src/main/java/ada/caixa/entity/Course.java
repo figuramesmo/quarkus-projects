@@ -15,6 +15,12 @@ public class Course extends PanacheEntityBase {
         this.lessons = new ArrayList<>();
     }
 
+    public Course(String name, String description){
+        this.name = name;
+        this.description = description;
+        this.lessons = new ArrayList<>();
+    }
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -26,6 +32,10 @@ public class Course extends PanacheEntityBase {
 
     @OneToMany(fetch = FetchType.LAZY)
     private List<Lesson> lessons;
+
+    public Long getId() {
+        return id;
+    }
 
     public String getName() {
         return name;
