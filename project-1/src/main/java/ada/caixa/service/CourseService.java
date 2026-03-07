@@ -7,6 +7,9 @@ import ada.caixa.repository.CourseRepository;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.transaction.Transactional;
 
+import java.util.List;
+import java.util.NoSuchElementException;
+
 @ApplicationScoped
 public class CourseService {
 
@@ -26,6 +29,36 @@ public class CourseService {
                 : new Course(name, description);
 
         courseRepository.persist(course);
+
+        return new CourseResponseDTO(
+                course.getId(),
+                course.getName(),
+                course.getDescription()
+        );
+    }
+
+    @Transactional
+    public List<CourseResponseDTO> getAllCourses() {
+        List<Course> courses = courseRepository.listAll();
+
+        if(courses.isEmpty()){
+            throw new NoSuchElementException("Nenhum curso encontrado.");
+        }
+
+        return courses.stream()
+                .map(course -> new CourseResponseDTO(
+                        course.getId(),
+                        course.getName(),
+                        course.getDescription()
+                ))
+                .toList();
+    }
+
+    @Transactional
+    public CourseResponseDTO getCourseById(Long id) {
+        Course course = courseRepository.findByIdOptional(id).orElseThrow(
+                () -> new NoSuchElementException("O curso com a id " + id + " não foi encontrado.")
+        );
 
         return new CourseResponseDTO(
                 course.getId(),

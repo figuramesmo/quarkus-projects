@@ -6,6 +6,9 @@ import jakarta.persistence.*;
 @Entity
 public class Lesson extends PanacheEntityBase {
 
+    public Lesson(){
+    }
+
     public Lesson(String name){
         this.name = name;
     }

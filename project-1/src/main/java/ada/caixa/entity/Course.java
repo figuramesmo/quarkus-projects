@@ -10,6 +10,9 @@ import java.util.List;
 @Table(name = "course")
 public class Course extends PanacheEntityBase {
 
+    public Course(){
+    }
+
     public Course(String name){
         this.name = name;
         this.lessons = new ArrayList<>();
