@@ -55,4 +55,12 @@ public class Course extends PanacheEntityBase {
     public void addLesson(Lesson lesson) {
         this.lessons.add(lesson);
     }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
 }

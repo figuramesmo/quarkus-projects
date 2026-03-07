@@ -67,4 +67,38 @@ public class CourseService {
         );
     }
 
+    @Transactional
+    public CourseResponseDTO updateCourse(
+            Long id,
+            CourseRequestDTO courseRequestDTO,
+            boolean name,
+            boolean description
+    ) {
+        Course course = courseRepository.findByIdOptional(id).orElseThrow(
+                () -> new NoSuchElementException("O curso com a id " + id + " não foi encontrado.")
+        );
+
+        String newName = courseRequestDTO.name();
+        String newDescription = courseRequestDTO.description();
+
+        if (name) course.setName(newName);
+        if (description) course.setDescription(newDescription);
+
+        courseRepository.persist(course);
+
+        return new CourseResponseDTO(
+                course.getId(),
+                course.getName(),
+                course.getDescription()
+        );
+    }
+
+    @Transactional
+    public void deleteCourse(Long id) {
+        Course course = courseRepository.findByIdOptional(id).orElseThrow(
+                () -> new NoSuchElementException("O curso com a id " + id + " não foi encontrado.")
+        );
+        courseRepository.delete(course);
+    }
+
 }
