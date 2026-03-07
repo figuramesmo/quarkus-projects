@@ -1,32 +1,30 @@
 package ada.caixa.errorhandler;
 
 import io.quarkus.logging.Log;
+import jakarta.validation.ConstraintViolationException;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.ext.ExceptionMapper;
 import jakarta.ws.rs.ext.Provider;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.time.LocalDateTime;
-import java.util.NoSuchElementException;
 
 @Provider
-public class NoSuchElementExceptionMapper implements ExceptionMapper<NoSuchElementException> {
+public class ConstraintViolationExceptionMapper implements ExceptionMapper<ConstraintViolationException> {
 
     @Override
-    public Response toResponse(NoSuchElementException exception) {
+    public Response toResponse(ConstraintViolationException exception) {
         // You can create a custom error response object here
         LocalDateTime currentTime = LocalDateTime.now();
         ErrorResponse errorResponse = new ErrorResponse(
                 exception.getMessage(),
-                Response.Status.NOT_FOUND.getStatusCode(),
+                Response.Status.BAD_REQUEST.getStatusCode(),
                 currentTime
         );
 
-        Log.error("Resource not found: {}", exception.getMessage(), exception);
+        Log.error("Entrada invalida: {}", exception.getMessage(), exception);
 
-        return Response.status(Response.Status.NOT_FOUND)
+        return Response.status(Response.Status.BAD_REQUEST)
                 .entity(errorResponse)
                 .type(MediaType.APPLICATION_JSON)
                 .build();
