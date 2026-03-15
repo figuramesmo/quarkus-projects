@@ -78,4 +78,11 @@ public class CourseResource {
         LessonResponseDTO response = courseService.addLessonToCourse(courseId, lessonRequestDTO);
         return Response.ok(response).build();
     }
+
+    @GET
+    @Path("/{id}/lessons")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getLessonsByCourseId(@PathParam("id") Long courseId){
+        return Response.ok(courseService.getLessonsByCourseId(courseId)).build();
+    }
 }

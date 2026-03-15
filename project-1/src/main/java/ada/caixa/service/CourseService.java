@@ -128,4 +128,24 @@ public class CourseService {
                 lesson.getName()
         );
     }
+
+    @Transactional
+    public Object getLessonsByCourseId(Long courseId) {
+        Course course = courseRepository.findByIdOptional(courseId).orElseThrow(
+                () -> new NoSuchElementException("O curso com a id " + courseId + " não foi encontrado.")
+        );
+
+        List<Lesson> lessons = course.getLessons();
+
+        if(lessons.isEmpty()){
+            throw new NoSuchElementException("Nenhuma aula encontrada para o curso com a id " + courseId + ".");
+        }
+
+        return lessons.stream()
+                .map(lesson -> new LessonResponseDTO(
+                        lesson.getId(),
+                        lesson.getName()
+                ))
+                .toList();
+    }
 }
