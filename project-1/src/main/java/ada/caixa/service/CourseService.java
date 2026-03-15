@@ -2,10 +2,16 @@ package ada.caixa.service;
 
 import ada.caixa.dto.CourseRequestDTO;
 import ada.caixa.dto.CourseResponseDTO;
+import ada.caixa.dto.LessonRequestDTO;
+import ada.caixa.dto.LessonResponseDTO;
 import ada.caixa.entity.Course;
+import ada.caixa.entity.Lesson;
 import ada.caixa.repository.CourseRepository;
+import ada.caixa.repository.LessonRepository;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.transaction.Transactional;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotNull;
 
 import java.util.List;
 import java.util.NoSuchElementException;
@@ -14,9 +20,11 @@ import java.util.NoSuchElementException;
 public class CourseService {
 
     private final CourseRepository courseRepository;
+    private final LessonRepository lessonRepository;
 
-    public CourseService(CourseRepository courseRepository) {
+    public CourseService(CourseRepository courseRepository, LessonRepository lessonRepository) {
         this.courseRepository = courseRepository;
+        this.lessonRepository = lessonRepository;
     }
 
     @Transactional
@@ -101,4 +109,23 @@ public class CourseService {
         courseRepository.delete(course);
     }
 
+    @Transactional
+    public LessonResponseDTO addLessonToCourse(Long courseId, LessonRequestDTO lessonRequestDTO) {
+        Course course = courseRepository.findByIdOptional(courseId).orElseThrow(
+                () -> new NoSuchElementException("O curso com a id " + courseId + " não foi encontrado.")
+        );
+
+        Lesson lesson = new Lesson(lessonRequestDTO.name());
+
+        lessonRepository.persist(lesson);
+
+        course.addLesson(lesson);
+
+        courseRepository.persist(course);
+
+        return new LessonResponseDTO(
+                lesson.getId(),
+                lesson.getName()
+        );
+    }
 }

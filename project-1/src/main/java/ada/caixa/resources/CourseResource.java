@@ -2,6 +2,8 @@ package ada.caixa.resources;
 
 import ada.caixa.dto.CourseRequestDTO;
 import ada.caixa.dto.CourseResponseDTO;
+import ada.caixa.dto.LessonRequestDTO;
+import ada.caixa.dto.LessonResponseDTO;
 import ada.caixa.service.CourseService;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
@@ -63,5 +65,17 @@ public class CourseResource {
     public Response deleteCourse(@PathParam("id") Long id) {
         courseService.deleteCourse(id);
         return Response.noContent().build();
+    }
+
+    @POST
+    @Path("/{id}/lessons")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response addLessonToCourse(
+            @PathParam("id") Long courseId,
+            @Valid @NotNull(message = "O corpo do seu request não pode ser nulo") LessonRequestDTO lessonRequestDTO
+    ) {
+        LessonResponseDTO response = courseService.addLessonToCourse(courseId, lessonRequestDTO);
+        return Response.ok(response).build();
     }
 }

@@ -20,7 +20,8 @@ public class Lesson extends PanacheEntityBase {
     @Column(unique = true, nullable = false)
     private String name;
 
-     public String getName() {
+    public String getName() {
         return name;
     }
+    public Long getId() { return id; }
 }
