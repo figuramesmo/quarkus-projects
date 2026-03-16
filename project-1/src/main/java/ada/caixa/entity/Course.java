@@ -33,7 +33,7 @@ public class Course extends PanacheEntityBase {
 
     private String description;
 
-    @OneToMany(fetch = FetchType.LAZY)
+    @OneToMany(fetch = FetchType.EAGER)
     private List<Lesson> lessons;
 
     public Long getId() {

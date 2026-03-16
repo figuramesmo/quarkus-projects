@@ -44,6 +44,9 @@ public class CourseService {
         );
     }
 
+    // O seguinte método usa polimorfismo para retornar
+    // uma lista de cursos ou uma resposta paginada, dependendo dos parâmetros passados.
+    // Versão sem paginação
     @Transactional
     public List<CourseResponseDTO> getAllCourses() {
         List<Course> courses = courseRepository.listAll();
@@ -61,6 +64,7 @@ public class CourseService {
                 .toList();
     }
 
+    // Versão com paginação
     @Transactional
     public PaginatedResponseDTO<CourseResponseDTO> getAllCourses(int page, int size) {
 

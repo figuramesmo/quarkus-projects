@@ -8,6 +8,7 @@ import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 
+import java.net.URI;
 import java.util.List;
 
 @Path("/courses")
@@ -26,11 +27,23 @@ public class CourseResource {
             @Valid @NotNull(message = "O Corpo do seu request não pode ser nulo") CourseRequestDTO courseRequestDTO
             ) {
         CourseResponseDTO response = courseService.createCourse(courseRequestDTO);
+        URI location = URI.create("/courses/" + response.id());
         return Response
+                .created(location)
                 .status(Response.Status.CREATED)
                 .entity(response)
                 .build();
     }
+
+    // Método sem paginação
+    // O testes do professor desse endpoint só funcionam com esse método
+    /*
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getAllCourses() {
+        return Response.ok(courseService.getAllCourses()).build();
+    }
+    */
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
@@ -49,6 +62,9 @@ public class CourseResource {
         return Response.ok(courseService.getCourseById(id)).build();
     }
 
+    // O seguinte método usa query params para indicar quais campos devem
+    // ser atualizados. Diverge um pouco da implementação do professor
+    // porque minha entidade "Curso" tem mais campos do que os mínimos solicitados
     @PUT
     @Path("/{id}")
     @Consumes(MediaType.APPLICATION_JSON)
@@ -79,7 +95,10 @@ public class CourseResource {
             @Valid @NotNull(message = "O corpo do seu request não pode ser nulo") LessonRequestDTO lessonRequestDTO
     ) {
         LessonResponseDTO response = courseService.addLessonToCourse(courseId, lessonRequestDTO);
-        return Response.ok(response).build();
+        return Response
+                .status(Response.Status.CREATED)
+                .entity(response)
+                .build();
     }
 
     @GET
