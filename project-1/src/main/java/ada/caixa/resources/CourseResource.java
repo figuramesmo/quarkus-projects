@@ -1,15 +1,14 @@
 package ada.caixa.resources;
 
-import ada.caixa.dto.CourseRequestDTO;
-import ada.caixa.dto.CourseResponseDTO;
-import ada.caixa.dto.LessonRequestDTO;
-import ada.caixa.dto.LessonResponseDTO;
+import ada.caixa.dto.*;
 import ada.caixa.service.CourseService;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
+
+import java.util.List;
 
 @Path("/courses")
 public class CourseResource {
@@ -35,8 +34,12 @@ public class CourseResource {
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getAllCourses() {
-        return Response.ok(courseService.getAllCourses()).build();
+    public Response getAllCourses(
+            @QueryParam("page") @DefaultValue("0") int page,
+            @QueryParam("size") @DefaultValue("5") int size
+    ) {
+        PaginatedResponseDTO<CourseResponseDTO> cursos = courseService.getAllCourses(page, size);
+        return Response.ok(cursos).type(MediaType.APPLICATION_JSON).build();
     }
 
     @GET

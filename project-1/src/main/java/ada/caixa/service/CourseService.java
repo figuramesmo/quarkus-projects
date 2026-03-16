@@ -1,13 +1,12 @@
 package ada.caixa.service;
 
-import ada.caixa.dto.CourseRequestDTO;
-import ada.caixa.dto.CourseResponseDTO;
-import ada.caixa.dto.LessonRequestDTO;
-import ada.caixa.dto.LessonResponseDTO;
+import ada.caixa.dto.*;
 import ada.caixa.entity.Course;
 import ada.caixa.entity.Lesson;
 import ada.caixa.repository.CourseRepository;
 import ada.caixa.repository.LessonRepository;
+import io.quarkus.hibernate.orm.panache.PanacheQuery;
+import io.quarkus.panache.common.Page;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
@@ -60,6 +59,36 @@ public class CourseService {
                         course.getDescription()
                 ))
                 .toList();
+    }
+
+    @Transactional
+    public PaginatedResponseDTO<CourseResponseDTO> getAllCourses(int page, int size) {
+
+        PanacheQuery<Course> query = courseRepository
+                .findAll()
+                .page(Page.of(page, size));
+
+        List<Course> courses = query.list();
+
+        if (courses.isEmpty()) {
+            throw new NoSuchElementException("Nenhum curso encontrado.");
+        }
+
+        List<CourseResponseDTO> listaCursos =  courses.stream()
+                .map(course -> new CourseResponseDTO(
+                        course.getId(),
+                        course.getName(),
+                        course.getDescription()
+                ))
+                .toList();
+
+        return new PaginatedResponseDTO<CourseResponseDTO>(
+                page,
+                size,
+                query.count(),
+                query.pageCount(),
+                listaCursos
+        );
     }
 
     @Transactional
