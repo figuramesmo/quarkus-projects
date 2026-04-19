@@ -36,11 +36,15 @@ public class User extends PanacheEntityBase {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
     @Column(nullable = false)
     private String name;
-    @Column(unique = true, nullable = false)
+
+    @Column(unique = true, nullable = false, comment="Email must be unique and not null")
     private String email;
+
     private String password;
+
     private String role;
 
     public Long getId() {
