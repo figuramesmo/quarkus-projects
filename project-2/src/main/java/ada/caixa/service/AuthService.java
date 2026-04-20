@@ -9,11 +9,15 @@ import io.quarkus.security.AuthenticationFailedException;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.transaction.Transactional;
 import jakarta.ws.rs.core.Response;
+import org.eclipse.microprofile.config.inject.ConfigProperty;
 
 import java.time.Duration;
 
 @ApplicationScoped
 public class AuthService {
+
+    @ConfigProperty(name = "auth.token.expiration.time.seconds")
+    Long tokenExpirationTimeSeconds;
 
     private final UserRepository userRepository;
     private final JWTGenerator jwtGenerator;
@@ -32,12 +36,10 @@ public class AuthService {
                 () -> new AuthenticationFailedException("Invalid email or password")
         );
 
-        Duration tokenExpiration = Duration.ofHours(1);
-
         return jwtGenerator.generateToken(
                 user.getId(),
                 user.getRole(),
-                tokenExpiration.toMillis()
+                tokenExpirationTimeSeconds
         );
     }
 

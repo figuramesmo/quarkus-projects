@@ -23,7 +23,6 @@ public class UserResource {
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    @RolesAllowed({"ADMIN"})
     public Response createUser(
             @Valid
             @NotNull(message = "O Corpo do seu request não pode ser nulo")
