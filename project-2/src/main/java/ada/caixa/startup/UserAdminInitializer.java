@@ -24,7 +24,7 @@ public class UserAdminInitializer {
     public void init(){
         User adminUser = new User(
                 "admin",
-                "admin@admin.com",
+                "admin",
                 "admin",
                 "ADMIN"
         );

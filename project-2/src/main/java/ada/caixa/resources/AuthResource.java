@@ -16,23 +16,11 @@ import jakarta.ws.rs.core.Response;
 @Path("/auth")
 public class AuthResource {
 
-    private final JWTGenerator jwtGenerator;
     private final AuthService authService;
 
-    public AuthResource(JWTGenerator jwtGenerator, AuthService authService) {
-        this.jwtGenerator = jwtGenerator;
+    public AuthResource(AuthService authService) {
         this.authService = authService;
     }
-
-    /*
-    @POST
-    @Path("/token")
-    public Response generateToken() {
-        JWTokenResponseDTO token = jwtGenerator.generateToken(3600L);
-        return Response.ok(token).build();
-    }
-    */
-
 
     @POST
     @Path("/token")

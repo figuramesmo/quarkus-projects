@@ -4,6 +4,7 @@ import ada.caixa.dto.UserRequestDTO;
 import ada.caixa.dto.UserResponseDTO;
 import ada.caixa.dto.UserSignInRequestDTO;
 import ada.caixa.service.UserService;
+import jakarta.annotation.security.RolesAllowed;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import jakarta.ws.rs.*;
@@ -22,6 +23,7 @@ public class UserResource {
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
+    @RolesAllowed({"ADMIN"})
     public Response createUser(
             @Valid
             @NotNull(message = "O Corpo do seu request não pode ser nulo")
@@ -36,12 +38,10 @@ public class UserResource {
 
     @GET
     @Path("/me")
-    public Response getMyCredentials(
-            @Valid
-            @NotNull(message = "O Corpo do seu request não pode ser nulo")
-            UserSignInRequestDTO userSignInRequestDTO
-    ){
-        UserResponseDTO response = userService.getUserCredentialsAuthenticated(userSignInRequestDTO);
+    @Produces(MediaType.APPLICATION_JSON)
+    @RolesAllowed({"ADMIN", "USER"})
+    public Response getMyCredentials(){
+        UserResponseDTO response = userService.getUserCredentialsAuthenticated();
         return Response.ok(response).build();
     }
 }
